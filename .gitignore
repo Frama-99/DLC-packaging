@@ -213,4 +213,10 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+### AdvancedInstaller ###
+# Advanced Installer caches and default build output
+*-cache/
+*-SetupFiles/
+Prerequisites/
+
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,macos,windows,python
