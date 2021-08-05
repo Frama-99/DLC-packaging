@@ -1,27 +1,30 @@
-# pyinstaller Packaging Instructions of DLC on macOS
+# Packaging Instructions
+## Information
+- Packaging OS: macOS Catalina
+- DLC Version: v2.1.9
+- Executable Works on: macOS Catalina
+- Executable Errors on: macOS Big Sur
+   - Reason: frame labelling toolbox and graph displays (both leveraging
+     matplotlib) crashes (more information below)
+- Status: Deprecated, since deeplabcut v2.2rc3 is released
 
-## TL;DR: How to package DLC for Mac
-1. Secure a Mac with macOS Catalina
-2. Create a Python script (e.g. `DLC.py`) with the following content:
-```
-os.environ["HDF5_DISABLE_VERSION_CHECK"] = "2"
-import deeplabcut
-deeplabcut.launch_dlc()
-```
-3. Follow steps from DLC to install the DLC-CPU conda environment, and
+## Step by Step Instructions
+0. Secure a Mac with macOS Catalina
+1. Follow steps from DLC to install the DLC-CPU conda environment, and
    activate it.
-4. Install `pyinstaller` using `pip install pyinstaller`
-5. Run `pyi-makespec --onefile DLC.py` to generate a template `.spec` file
+2. Install `pyinstaller` using `pip install pyinstaller` (not conda)
+3. Run `pyi-makespec --windowed DLC.py` to generate a template `.spec` file
    for the script
-6. In the `.spec` file, add the hidden imports specified below
-7. Run `pyinstaller DLC.spec`
-8. Copy the `deeplabcut` folder into `dist/DLC.app/Contents/MacOS/` to fill
+4. In the `.spec` file, add the hidden imports specified below
+5. Run `pyinstaller DLC.spec`
+6. Copy the `deeplabcut` folder into `dist/DLC.app/Contents/MacOS/` to fill
    in the missing media
-9. Copy `libpng16.16.dylib` (follow instructions
+7. Copy `libpng16.16.dylib` (follow instructions
    [here](https://stackoverflow.com/questions/61824188/issue-converting-python-script-with-pyinstaller-import-error-incompatible-libr)
    to download the library) into `dist/DLC.app/Contents/MacOS/` to resolve
    the library version conflict error
 
+# Detailed Troubleshooting Steps
 ## Packaging with pyinstaller on macOS Big Sur
 The first attempt was to compile DLC using pyinstaller on macOS Big Sur.
 This is the error message: 
@@ -125,7 +128,7 @@ os.environ["HDF5_DISABLE_VERSION_CHECK"] = "2"
 ```
 The version mismatch didn't seem to result in any errors per testing below.
 
-### Testing on macOS Catalina
+## Testing on macOS Catalina
 I made two test projects, one using the native Python distribution of DLC,
 and another using the pyinstaller packaged version. I tested the following
 functions:
@@ -141,7 +144,7 @@ functions:
 All of these functions work on the packaged version, at comparable speeds
 compared to the native Python distribution.
 
-## Moving the Catalina packaged DLC on Big Sur
+## Testing the Catalina packaged DLC on Big Sur
 Next is testing if the app packaged on Catalina will work on Big Sur. I
 made another test project and tested the functions above. Two things
 resulted in crashes:

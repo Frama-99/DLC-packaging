@@ -1,15 +1,34 @@
-# pyinstaller Packaging instructions on MacOS Big Sur
-1. Install and activate the DLC conda environment from the latest pull
-2. Install `pyinstaller`: `pip install pyinstaller`
-3. Package 
+# Packaging Instructions
+## Information
+- Packaging OS: macOS Big Sur
+- DLC Version: v2.2rc3
+- Executable Works on: none
+- Executable Errors on: macOS Big Sur
+   - Reason: segfault while k-means clustering (see below)
+- Status: work in progress
+
+## Step-by-step instructions
+0. Secure a Mac with Big Sur
+1. Follow steps from DLC to install the DLC-CPU conda environment, and
+   activate it.
+2. Install `pyinstaller` using `pip install pyinstaller` (not conda)
+3. Run `pyinstaller --windowed DLC.py` (no hidden imports needed)
 4. Download a working copy of `libiomp5.dylib` by running `conda install -c
    conda-forge llvm-openmp`, and finding the `dylib` in the conda package.
    Move this `dylib` into `DLC.app/Contents/MacOS`, replacing what's
    already there.
-5. 
+5. Copy `libpng16.16.dylib` (follow instructions
+   [here](https://stackoverflow.com/questions/61824188/issue-converting-python-script-with-pyinstaller-import-error-incompatible-libr)
+   to download the library) into `dist/DLC.app/Contents/MacOS/` to resolve
+   the library version conflict error
+6. Copy the `deeplabcut` folder into `dist/DLC.app/Contents/MacOS/` to fill
+   in the missing media
+7. Copy the `tensorpack` folder into `dist/DLC.app/Contents/MacOS/` to fill
+   in missing files from the library
+8. ...
 
-## Detailed Documentation
-### Starting from Scratch
+# Detailed Troubleshooting Steps
+## Packaging with pyinstaller on macOS Big Sur: Starting from Scratch
 DeepLabCut updated the library to support TF 2.x! This means that we can
 finally use pyinstaller on macOS Big Sur, since we can finally upgrade to
 Python 3.8, which supports an updated pyinstaller version that fixes the
