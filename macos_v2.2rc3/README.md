@@ -71,6 +71,48 @@ supplemented to the dist folder. These are:
 - `deeplabcut/gui/media/logo.png`
 - `deeplabcut/pose_cfg.yaml`
 
+These steps were needed to launch DLC successfully
 Curiously, no hidden imports needed to be added at this point to launch
 DLC. The `HDF5` library version did not result in an error either (which
 was an issue in the Catalina-made package). 
+
+## Troubleshooting while Using DLC
+### Fixing error where commands appear to execute multiple times
+This was an error that also occurred on Windows, and is fixed by adding the
+following two lines at the start of the `DLC.py`:
+```
+import multiprocessing
+multiprocessing.freeze_support()
+```
+
+### Fixing segfault while K-means clustering
+```
+*** Received signal 11 ***
+*** BEGIN MANGLED STACK TRACE ***
+0   libtensorflow_framework.2.dylib     0x00000001153210e7 _ZN10tensorflow7testingL17StacktraceHandlerEiP9__siginfoPv + 183
+1   libsystem_platform.dylib            0x00007fff205fed7d _sigtramp + 29
+2   ???                                 0x0000000000000000 0x0 + 0
+3   libomp.dylib                        0x00000001585d8e77 _ZL27__kmp_hyper_barrier_release12barrier_typeP8kmp_infoiiiPv + 151
+4   libomp.dylib                        0x00000001585db5fe _Z18__kmp_fork_barrierii + 445
+5   libomp.dylib                        0x00000001585c45e2 __kmp_launch_thread + 186
+6   libomp.dylib                        0x00000001585ee9e4 _ZL19__kmp_launch_workerPv + 278
+7   libsystem_pthread.dylib             0x00007fff205b98fc _pthread_start + 224
+8   libsystem_pthread.dylib             0x00007fff205b5443 thread_start + 15
+*** END MANGLED STACK TRACE ***
+
+*** Begin stack trace ***
+	tensorflow::CurrentStackTrace()
+	tensorflow::testing::StacktraceHandler(int, __siginfo*, void*)
+	_sigtramp
+
+	__kmp_hyper_barrier_release(barrier_type, kmp_info*, int, int, int, void*)
+	__kmp_fork_barrier(int, int)
+	__kmp_launch_thread
+	__kmp_launch_worker(void*)
+	_pthread_start
+	thread_start
+*** End stack trace ***
+multiprocessing/resource_tracker.py:216: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+[1]    4020 abort      ./dist/DLC.app/Contents/MacOS/DLC
+```
+...work in progress. 

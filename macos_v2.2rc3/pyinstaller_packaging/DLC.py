@@ -1,8 +1,7 @@
-# import multiprocessing
-# multiprocessing.freeze_support()
+import multiprocessing
+multiprocessing.freeze_support()
 
-if __name__ == '__main__':
-    print("Loading DeepLabCut... This may take about 30 seconds.")
+print("Loading DeepLabCut... This may take about 30 seconds.")
 
-    import deeplabcut
-    deeplabcut.launch_dlc()
+import deeplabcut
+deeplabcut.launch_dlc()
